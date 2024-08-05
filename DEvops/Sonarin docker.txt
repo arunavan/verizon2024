@@ -1,0 +1,6 @@
+  docker run -d --name sonarqube -p 9000:9000 sonarqube:7.5-community 
+  docker ps 
+  log in to SonarQube server on 
+  http://localhost:9000 using default credentials: 
+  login: admin password: admin 
+  http://localhost:9000/account/security/ and generate a token
