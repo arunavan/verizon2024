@@ -1,0 +1,35 @@
+git clone http://github.com/.../repo.git
+
+d:\> cd repo
+
+d:\repo> add file
+
+d:\repo> git add .
+added staging area
+
+d:\repo>git commit -m 'coment'
+added to local repo
+
+d:\repo>git push origin master
+added to remote repo
+
+
+d:\> md gitrepo
+d:\>cd gitrepo
+d:\gitrepo>git init
+d:\gitrepo> add files
+
+d:\gitrepo> git config --global user.name 'xx'
+d:\gitrepo> git config --global user.email 'xx@gmail.com'
+
+d:\repo> git add .
+added staging area
+
+d:\repo>git commit -m 'coment'
+added to local repo
+
+d:\repo>git push origin master
+added to remote repo
+
+
+
