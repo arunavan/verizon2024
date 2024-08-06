@@ -1,0 +1,23 @@
+H/w
+-------
+Processor : Intel i5  2GHz or above 
+Operating System : Windows  10  32/64 bit 
+RAM : 8GB or above
+Hard disk : 1TB or  above 
+
+
+S/w
+
+Lab setup for Spring Boot and Microservices
+--------------------------------------------
+JDK 8
+SpringTools Suite IDE/Eclipse 
+Spring Boot CLI
+Maven 3.4 or above
+Tomcat 9
+Postgres
+Google Chrome Postman plugin
+Docker
+Jenkins
+Selenium IDE
+Azure account

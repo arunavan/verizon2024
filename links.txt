@@ -1,0 +1,23 @@
+Batch4(V Aruna)
+
+URL:  https://labs.alchemycloud.co.in
+
+Username: alchemycloud\test14
+
+Password: Host@123
+
+ 
+
+in case a Base Machine local user is required.
+
+username: .\test
+
+password: welcome
+
+ LMS:
+================
+https://platform.learnlytica.com/
+	
+reacharuna302@gmail.com
+
+learner123
