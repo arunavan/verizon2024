@@ -1,5 +1,4 @@
--com.sapient.asde.model
-------------------------------------------
+
 public class Car {
 	private String careMake; //ex. Maruti 
 	private String carName; // ex.Swift Dezire
@@ -48,7 +47,7 @@ public class Car {
 	
 }
 
-com.sapient.asde.service
+
 ----------------------------------------------------------------
 public interface CarService{
 	public double sumOfPrices(List<Car> carList);
@@ -66,7 +65,7 @@ public interface CarService{
 //Implement the above interface using Stream API in com.sapient.asde.service
 
 --------------------------------------------------------
-com.sapient.asde.ui
+
 
 
 //Test the methods
