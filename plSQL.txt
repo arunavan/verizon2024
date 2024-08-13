@@ -1,0 +1,190 @@
+cursors:
+
+DECLARE  
+   total_rows number(2); 
+BEGIN 
+   UPDATE customers 
+   SET salary = salary + 500; 
+   IF sql%notfound THEN 
+      dbms_output.put_line('no customers selected'); 
+   ELSIF sql%found THEN 
+      total_rows := sql%rowcount;
+      dbms_output.put_line( total_rows || ' customers selected '); 
+   END IF;  
+END; 
+/     
+
+
+DECLARE 
+   c_id customers.id%type; 
+   c_name customers.name%type; 
+   c_addr customers.address%type; 
+   CURSOR c_customers is 
+      SELECT id, name, address FROM customers; 
+BEGIN 
+   OPEN c_customers; 
+   LOOP 
+   FETCH c_customers into c_id, c_name, c_addr; 
+      EXIT WHEN c_customers%notfound; 
+      dbms_output.put_line(c_id || ' ' || c_name || ' ' || c_addr); 
+   END LOOP; 
+   CLOSE c_customers; 
+END; 
+/
+
+DECLARE 
+   c customers%rowtype; 
+    CURSOR c_customers is 
+      SELECT * FROM customers; 
+BEGIN 
+   OPEN c_customers; 
+   LOOP 
+   FETCH c_customers into c; 
+      EXIT WHEN c_customers%notfound; 
+      dbms_output.put_line(c.id || ' ' || c.name || ' ' || c.address); 
+   END LOOP; 
+   CLOSE c_customers; 
+END; 
+/
+
+
+
+triggers:
+
+
+create table customers(id number primary key, name varchar(20),age number,address varchar(20), salary number));
+
+insert into customers values(1,'ramesh',32,'Hyd',2000.00);
+insert into customers values(2,'Khilan',25 ,'Delhi',1500.00); 
+insert into customers values(3, 'kaushik',23 ,'Kota',2000.00);
+insert into customers values(4, 'Chaitali',25 ,'Mumbai',6500.00); 
+insert into customers values(5, 'Hardik',27,'Bhopal'    ,  8500.00); 
+insert into customers values(6, ' Komal',22,'MP'        ,4500.00);
+
+Select * from customers; 
+ 
+
++----+----------+-----+-----------+----------+ 
+| ID | NAME     | AGE | ADDRESS   | SALARY   | 
++----+----------+-----+-----------+----------+ 
+|  1 | Ramesh   |  32 | Ahmedabad |  2000.00 | 
+|  2 | Khilan   |  25 | Delhi     |  1500.00 | 
+|  3 | kaushik  |  23 | Kota      |  2000.00 | 
+|  4 | Chaitali |  25 | Mumbai    |  6500.00 | 
+|  5 | Hardik   |  27 | Bhopal    |  8500.00 | 
+|  6 | Komal    |  22 | MP        |  4500.00 | 
+
+
+
+CREATE OR REPLACE TRIGGER display_salary_changes123 
+BEFORE DELETE OR INSERT OR UPDATE ON customers 
+FOR EACH ROW 
+WHEN (NEW.ID > 0) 
+DECLARE 
+   sal_diff number; 
+BEGIN 
+   sal_diff := :NEW.salary  - :OLD.salary; 
+   dbms_output.put_line('Old salary: ' || :OLD.salary); 
+   dbms_output.put_line('New salary: ' || :NEW.salary); 
+   dbms_output.put_line('Salary difference: ' || sal_diff); 
+END; 
+/ 
+
+
+
+
+PL/SQL:
+=======
+
+SET SERVEROUTPUT ON
+DECLARE
+Myname VARCHAR2(20);
+BEGIN
+DBMS_OUTPUT.PUT_LINE('My name is: '||Myname);
+Myname := 'John';
+DBMS_OUTPUT.PUT_LINE('My name is: '||Myname);
+END;
+/
+===========================================
+DECLARE
+myage number:=31;
+BEGIN
+IF myage < 11 THEN
+DBMS_OUTPUT.PUT_LINE('I ama child ');
+ELSE
+DBMS_OUTPUT.PUT_LINE('I am nota child ');
+END IF;
+END; 
+/
+
+================================================
+
+
+DECLARE
+grade CHAR(1) := UPPER('&grade');
+appraisal VARCHAR2(20);
+BEGIN
+appraisal:= CASE grade
+WHEN 'A' THEN 'Excellent'
+WHEN 'B' THEN 'Very Good'
+WHEN 'C' THEN 'Good'
+ELSE 'No such grade'
+END;
+DBMS_OUTPUT.PUT_LINE ('Grade: '|| grade ||'Appraisal' || appraisal);
+END; 
+/
+
+
+===================================================
+declare
+n_num number := 1;
+begin
+loop
+dbms_output.put(n_num||', ');
+n_num := n_num
++ 1;
+exit when n_num
+> 5;
+end loop;
+dbms_output.put_line('Final: '||n_num);
+end; 
+/
+=====================================================
+
+DECLARE
+salary number;
+BEGIN
+dbms_output.put_line('Enter the emp no');
+SELECT sal into salary from emp where empno=&empno
+;
+WHILE salary<= 4000
+LOOP
+salary := salary
+* 31;
+dbms_output.put_line(salary);
+END LOOP;
+end; 
+/
+=========================================================
+create table employees(employee_id numbe primary key, salary number);
+
+
+VARIABLE emp_salary NUMBER
+SET AUTOPRINT ON
+DECLARE
+empno NUMBER(6):=&empno;
+BEGIN
+SELECT salary INTO :emp_salary
+FROM employees WHERE employee_id = empno;
+END;
+/
+
+==========================
+DECLARE
+step PLS_INTEGER := 2;
+BEGIN
+FOR i IN 1..3 LOOP
+DBMS_OUTPUT.PUT_LINE (i*step);
+END LOOP;
+END;
+/
