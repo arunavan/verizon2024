@@ -2,11 +2,13 @@
 Course:=
 =====================
 Create table course(cid int primary key,name varchar(20),duration int);
+
 Insert into course values(1,'java',3),(2,'oracle',2),(3,'jee',4),(4,'python',4),(5,'angular',2);
 
 Student:
 ======================
 Create  table student(sid int primary key, sname varchar(20), email varchar(20),cid int references course(cid));
+
 Insert into student values(101,'ram','ram@gmail.com',3);
 Insert into student values(102,'ravi','ram@gmail.com',2);
 Insert into student values(103,'raj','ram@gmail.com',3);
