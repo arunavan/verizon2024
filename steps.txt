@@ -1,0 +1,14 @@
+ 
+java -jar  selenium-server-4.23.1.jar  hub
+
+
+
+
+Grid UI:
+==========
+http://192.168.29.106:4444
+
+
+Node:
+=========
+java -jar  selenium-server-4.23.1.jar  node
