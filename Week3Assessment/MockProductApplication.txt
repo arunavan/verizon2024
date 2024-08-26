@@ -1,0 +1,17 @@
+
+
+I.Project template is provided .
+
+Need to implement 
+1.RestController
+2.ProductService
+
+Perform All 1. AddProduct(),
+                       2. GetAllProducts(),
+                       3. UpdateProduct(update price)
+                       4.DeleteProduct()
+
+submit project source cod ein Zip format
+
+II.Send screenshots of postman for all above operations in Word doc.
+
