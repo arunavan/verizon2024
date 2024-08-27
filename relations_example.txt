@@ -1,0 +1,507 @@
+Example of a One-to-Many Relationship in Spring Boot using Spring Data JPA
+Let’s create an example of a one-to-many relationship between two entities: Author and Book. An author can have multiple books.
+
+package com.example.demo.entity;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+public class Author {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Book> books = new HashSet<>();
+
+    // Constructors, Getters, and Setters
+    public Author() {
+    }
+
+    public Author(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
+        book.setAuthor(this);
+    }
+
+    public void removeBook(Book book) {
+        books.remove(book);
+        book.setAuthor(null);
+    }
+}
+Book Entity
+
+package com.example.demo.entity;
+
+import javax.persistence.*;
+
+@Entity
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
+    // Constructors, Getters, and Setters
+    public Book() {
+    }
+
+    public Book(String title) {
+        this.title = title;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+}
+3. Create the Repositories
+Author Repository
+
+package com.example.demo.repository;
+
+import com.example.demo.entity.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AuthorRepository extends JpaRepository<Author, Long> {
+}
+Book Repository
+java
+Copy code
+package com.example.demo.repository;
+
+import com.example.demo.entity.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<Book, Long> {
+}
+4. Create the Service Layer
+java
+Copy code
+package com.example.demo.service;
+
+import com.example.demo.entity.Author;
+import com.example.demo.entity.Book;
+import com.example.demo.repository.AuthorRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class AuthorService {
+
+    private final AuthorRepository authorRepository;
+
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
+
+    @Transactional
+    public Author saveAuthorWithBooks() {
+        Author author = new Author("John Doe");
+
+        Book book1 = new Book("Spring Boot Basics");
+        Book book2 = new Book("Advanced JPA");
+
+        author.addBook(book1);
+        author.addBook(book2);
+
+        return authorRepository.save(author);
+    }
+
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
+    }
+}
+5. Create the Controller
+
+package com.example.demo.controller;
+
+import com.example.demo.entity.Author;
+import com.example.demo.service.AuthorService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/authors")
+public class AuthorController {
+
+    private final AuthorService authorService;
+
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
+    }
+
+    @GetMapping("/create")
+    public Author createAuthorWithBooks() {
+        return authorService.saveAuthorWithBooks();
+    }
+
+    @GetMapping
+    public List<Author> getAllAuthors() {
+        return authorService.getAllAuthors();
+    }
+}
+
+6. Application Properties
+Add the following in application.properties to configure the H2 database:
+
+properties
+Copy code
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=password
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+spring.jpa.hibernate.ddl-auto=update
+7. Run the Application
+When you run the application and access the endpoints:
+
+/api/authors/create: This will create an author along with their books and save them to the database.
+/api/authors: This will return all authors and their books.
+8. Sample Output
+Accessing /api/authors/create will return something like:
+
+
+{
+    "id": 1,
+    "name": "John Doe",
+    "books": [
+        {
+            "id": 1,
+            "title": "Spring Boot Basics"
+        },
+        {
+            "id": 2,
+            "title": "Advanced JPA"
+        }
+    ]
+}
+Accessing /api/authors after creating the author will return:
+
+
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "books": [
+            {
+                "id": 1,
+                "title": "Spring Boot Basics"
+            },
+            {
+                "id": 2,
+                "title": "Advanced JPA"
+            }
+        ]
+    }
+]
+
+
+------------------------------------------------
+Example of a Many-to-One Relationship in Spring Boot using Spring Data JPA
+Let’s consider an example where multiple Book entities are associated with a single Publisher. This is a typical many-to-one relationship: many books can have the same publisher.
+
+1. Project Setup
+Ensure you have the necessary dependencies in your pom.xml (as shown in the previous one-to-many example).
+
+2. Create the Entities
+Publisher Entity
+
+package com.example.demo.entity;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+public class Publisher {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Book> books = new HashSet<>();
+
+    // Constructors, Getters, and Setters
+    public Publisher() {
+    }
+
+    public Publisher(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+}
+Book Entity
+
+package com.example.demo.entity;
+
+import javax.persistence.*;
+
+@Entity
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
+    // Constructors, Getters, and Setters
+    public Book() {
+    }
+
+    public Book(String title) {
+        this.title = title;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+}
+3. Create the Repositories
+Publisher Repository
+
+package com.example.demo.repository;
+
+import com.example.demo.entity.Publisher;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PublisherRepository extends JpaRepository<Publisher, Long> {
+}
+Book Repository
+
+package com.example.demo.repository;
+
+import com.example.demo.entity.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<Book, Long> {
+}
+4. Create the Service Layer
+
+package com.example.demo.service;
+
+import com.example.demo.entity.Book;
+import com.example.demo.entity.Publisher;
+import com.example.demo.repository.PublisherRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class PublisherService {
+
+    private final PublisherRepository publisherRepository;
+
+    public PublisherService(PublisherRepository publisherRepository) {
+        this.publisherRepository = publisherRepository;
+    }
+
+    @Transactional
+    public Publisher savePublisherWithBooks() {
+        Publisher publisher = new Publisher("O'Reilly Media");
+
+        Book book1 = new Book("Learning Spring Boot");
+        Book book2 = new Book("Pro JPA 2");
+
+        book1.setPublisher(publisher);
+        book2.setPublisher(publisher);
+
+        publisher.getBooks().add(book1);
+        publisher.getBooks().add(book2);
+
+        return publisherRepository.save(publisher);
+    }
+
+    public List<Publisher> getAllPublishers() {
+        return publisherRepository.findAll();
+    }
+}
+5. Create the Controller
+
+package com.example.demo.controller;
+
+import com.example.demo.entity.Publisher;
+import com.example.demo.service.PublisherService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/publishers")
+public class PublisherController {
+
+    private final PublisherService publisherService;
+
+    public PublisherController(PublisherService publisherService) {
+        this.publisherService = publisherService;
+    }
+
+    @GetMapping("/create")
+    public Publisher createPublisherWithBooks() {
+        return publisherService.savePublisherWithBooks();
+    }
+
+    @GetMapping
+    public List<Publisher> getAllPublishers() {
+        return publisherService.getAllPublishers();
+    }
+}
+6. Application Properties
+The application.properties configuration remains the same as in the previous example.
+
+7. Run the Application
+When you run the application and access the endpoints:
+
+/api/publishers/create: This will create a publisher along with their books and save them to the database.
+/api/publishers: This will return all publishers and their books.
+8. Sample Output
+Accessing /api/publishers/create will return something like:
+
+json
+Copy code
+{
+    "id": 1,
+    "name": "O'Reilly Media",
+    "books": [
+        {
+            "id": 1,
+            "title": "Learning Spring Boot"
+        },
+        {
+            "id": 2,
+            "title": "Pro JPA 2"
+        }
+    ]
+}
+Accessing /api/publishers after creating the publisher will return:
+
+
+[
+    {
+        "id": 1,
+        "name": "O'Reilly Media",
+        "books": [
+            {
+                "id": 1,
+                "title": "Learning Spring Boot"
+            },
+            {
+                "id": 2,
+                "title": "Pro JPA 2"
+            }
+        ]
+    }
+]
