@@ -1,0 +1,28 @@
+
+1.Start docker desktop
+
+2.Display available images
+
+3.create java class  
+  class Customer{
+    String name;
+  
+   Customer(String name) {
+     // fill code
+   }
+
+  void displayCustomerName() {
+   //fill code to display customer name
+  }
+ public static void main(string args[]) {
+  { Customer c=new Customer("VerizonUSer");
+     //call function to display customer name
+}
+}
+
+3.Create a docker file with required instructions FROM,COPY,RUN,CMD etc
+
+4.Create customer-app image
+
+5.Run customer-app  container in docker desktop
+
