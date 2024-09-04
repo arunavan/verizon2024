@@ -1,0 +1,23 @@
+
+
+I.Project template is provided .
+
+Need to implement 
+1.RestController
+2.ProductService
+3.ProductDao with one custom query
+
+3.Create ProductNotFoundException in com.verizon.exeption package 
+
+Perform All 1.  void AddProduct(),
+                       2.  List<Product> GetAllProducts(),
+                       3.  Product GetProductById(Integer id) throws ProductNotFoundException
+			4. List<Product> GetAllProductsBetweenPrice(Integer low,Integer high);
+                       3.  void UpdateProduct(Integer id,Product product)throws ProductNotFoundException
+                       4.  void DeleteProduct(Integer id)throws ProductNotFoundException
+
+
+submit project source code in Zip format
+
+Send screenshots of postman for all above operations in Word doc.
+
